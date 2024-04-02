@@ -1,0 +1,56 @@
+// Define the MongoDB datasource
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Model for Venues
+model Venue {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  state       String
+  city        String
+  street      String
+  zipcode     String
+  venueStatus String    // "open" or "close"
+  details     String      // About amenities
+  venueType   String
+  images         String[]        // Array of Base64 encoded images
+  activities  Activity[]
+  registrations Registration[] @relation("venueRegistrations")
+}
+
+// Model for Activities
+model Activity {
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  venueId       String
+  venue         Venue         @relation(fields: [venueId], references: [id])
+  ageRange      String
+  cost          Float
+  capacity      Int
+  activityStatus String      // "open", "sold out", or "cancelled"
+  images         String[]        // Array of Base64 encoded images
+  startTime     DateTime
+  endTime       DateTime
+  registrations Registration[] @relation("activityRegistrations")
+}
+
+// Model for Registrations
+model Registration {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String    // ID from User Service
+  venueId       String?
+  venue         Venue?    @relation(fields: [venueId], references: [id], name: "venueRegistrations")
+  activityId    String?
+  activity      Activity? @relation(fields: [activityId], references: [id], name: "activityRegistrations")
+  bookingTimeStamp DateTime
+  status        String    // "booked", "confirmed", or "cancelled"
+  paymentStatus String    // "Pending", "Completed", or "Refunded"
+  venueRating   Int?
+  activityRating Int?
+}

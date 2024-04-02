@@ -1,0 +1,14 @@
+
+
+export interface Venue{
+  id: string; 
+  name: string; 
+  state: string; 
+  city: string; 
+  street: string; 
+  zipcode: string; 
+  venueStatus: string; 
+  details: string; 
+  venueType: string; 
+  images: string[]; 
+}
