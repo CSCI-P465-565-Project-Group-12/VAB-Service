@@ -7,7 +7,7 @@ export interface Venue{
   city: string; 
   street: string; 
   zipcode: string; 
-  venueStatus: string; 
+  venueStatus: 'active' | 'inactive';
   details: string; 
   venueType: string; 
   images: string[]; 

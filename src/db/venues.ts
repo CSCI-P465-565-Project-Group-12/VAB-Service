@@ -32,7 +32,7 @@ export const getAllVenues = async () => {
   return await prisma.venue.findMany();
 }
 
-export const updateVenue = async(venueId: string, updateParams: Venue) =>{
+export const updateVenue = async(venueId: string, updateParams: Partial<Venue>) =>{
   return await prisma.venue.update({
       where: {
           id: venueId,
