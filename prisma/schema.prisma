@@ -44,11 +44,11 @@ model Activity {
 model Registration {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
   userId        String    // ID from User Service
-  venueId       String?
-  venue         Venue?    @relation(fields: [venueId], references: [id], name: "venueRegistrations")
+  venueId       String
+  venue         Venue    @relation(fields: [venueId], references: [id], name: "venueRegistrations")
   activityId    String?
   activity      Activity? @relation(fields: [activityId], references: [id], name: "activityRegistrations")
-  bookingTimeStamp DateTime
+    bookingTimeStamp DateTime
   status        String    // "booked", "confirmed", or "cancelled"
   paymentStatus String    // "Pending", "Completed", or "Refunded"
   venueRating   Int?
