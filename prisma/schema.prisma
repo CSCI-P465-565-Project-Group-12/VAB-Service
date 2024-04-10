@@ -21,7 +21,7 @@ model Venue {
   venueType   String
   images         String[]        // Array of Base64 encoded images
   activities  Activity[]
-  registrations Registration[] @relation("venueRegistrations")
+  Reservations Reservation[] @relation("venueReservations")
 }
 
 // Model for Activities
@@ -37,18 +37,18 @@ model Activity {
   images         String[]        // Array of Base64 encoded images
   startTime     DateTime
   endTime       DateTime
-  registrations Registration[] @relation("activityRegistrations")
+  Reservations Reservation[] @relation("activityReservations")
 }
 
-// Model for Registrations
-model Registration {
+// Model for Reservations
+model Reservation {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
   userId        String    // ID from User Service
   venueId       String
-  venue         Venue    @relation(fields: [venueId], references: [id], name: "venueRegistrations")
+  venue         Venue    @relation(fields: [venueId], references: [id], name: "venueReservations")
   activityId    String?
-  activity      Activity? @relation(fields: [activityId], references: [id], name: "activityRegistrations")
-    bookingTimeStamp DateTime
+  activity      Activity? @relation(fields: [activityId], references: [id], name: "activityReservations")
+  bookingTimeStamp DateTime
   status        String    // "booked", "confirmed", or "cancelled"
   paymentStatus String    // "Pending", "Completed", or "Refunded"
   venueRating   Int?

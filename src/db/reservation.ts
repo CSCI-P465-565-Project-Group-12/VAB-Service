@@ -1,44 +1,65 @@
 // Purpose: Contains functions that interact with the database to perform CRUD operations on the venues table.
 import {prisma} from '../db/index';
-import { Activity } from '../models/activity';
+import { Reservation } from '../models/reservation';
 
-export const createActivity = async(activity: Activity) => {
-  const {id, name, venueId, ageRange, cost, capacity, activityStatus, startTime, endTime, images} = activity;
-  return await prisma.activity.create({
+export const createReservation = async(reservation: Reservation) => {
+  const {id, userId, activityId, venueId, status, paymentStatus, bookingTimeStamp} = reservation;
+  return await prisma.reservation.create({
       data: {
         id,
-        name,
+        userId,
         venueId,
-        ageRange,
-        cost,
-        capacity,
-        activityStatus,
-        startTime,
-        endTime,
-        images,
+        activityId,
+        status,
+        paymentStatus,
+        bookingTimeStamp,
       },
   });
 }
 
-export const getActivity = async (activityId: string) => {
-	return await prisma.activity.findUnique({
+export const getReservation = async (reservationId: string) => {
+	return await prisma.reservation.findUnique({
 		where: {
-			id: String(activityId),
+			id: String(reservationId),
 		},
 	});
 };
 
-export const getAllVenues = async () => {
-  return await prisma.activity.findMany();
+export const getAllReservations = async () => {
+  return await prisma.reservation.findMany();
 }
 
-export const updateVenue = async(activityId: string, updateParams: Partial<Activity>) =>{
-  return await prisma.activity.update({
+export const updateReservation = async(reservationId: string, updateParams: Partial<Reservation>) =>{
+  return await prisma.reservation.update({
       where: {
-          id: activityId,
+          id: reservationId,
       },
       data: {
           ...updateParams,
       },
   });
 }
+
+export const getReservationsByUser = async (userId: string) => {
+  return await prisma.reservation.findMany({
+    where: {
+      userId,
+    },
+  });
+};
+
+export const getReservationsByActivity = async (activityId: string) => {
+  return await prisma.reservation.findMany({
+    where: {
+      activityId,
+    },
+  });
+};
+
+export const getReservationsByVenue = async (venueId: string) => {
+  return await prisma.reservation.findMany({
+    where: {
+      venueId,
+    },
+  });
+};

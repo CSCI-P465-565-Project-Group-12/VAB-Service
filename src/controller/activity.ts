@@ -3,6 +3,8 @@ import { createActivity, getActivity, getAllActivities, findConflictActivities, 
 import { Activity } from "../models/activity";
 import { v4 as uuidv4 } from "uuid";
 
+//TODO: activity rating take average of all ratings from reservsations.activityRating
+
 export const createActivityReq = async (req: Request, res: Response) => {
   const { name, venueId, ageRange, cost, capacity, activityStatus, startTime, endTime, images } = req.body;
   const id = uuidv4();

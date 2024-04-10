@@ -6,4 +6,6 @@ export interface Reservation {
   status: "Booked" | "Confirmed" | "Cancelled";
   paymentStatus: "Pending" | "Completed" | "Refunded";
   bookingTimeStamp: Date;
+  venueRating?: number;
+  activityRating?: number;
 }

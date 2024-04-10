@@ -3,6 +3,8 @@ import { createVenue, getVenue, getAllVenues, updateVenue } from "../db/venues";
 import { Venue } from "../models/venue";
 import { v4 as uuidv4 } from "uuid";
 
+//TODO: venue rating take average of all ratings from reservsations.venueRating
+
 export const createVenueReq = async (req: Request, res: Response) => {
   const { name, state, city, street, zipcode, details, venueType, images } = req.body;
   const venueStatus = "active";

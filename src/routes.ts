@@ -9,6 +9,14 @@ import {
   getAllActivitiesReq,
   getActivitiesByVenueReq,
   changeActivityStatusReq,
+  createReservationReq,
+  getReservationReq,
+  getAllReservationsReq,
+  getReservationsByUserReq,
+  getReservationsByActivityReq,
+  getReservationsByVenueReq,
+  changePaymentStatusReq,
+  changeReservationStatusReq
 } from "./controller/index";
 import { validateUserToken, validateVenueOwnerToken } from "./middleware/auth";
 
@@ -24,5 +32,13 @@ router.get('/activity/:activityId',validateUserToken, getActivityReq);
 router.get('/activities',validateUserToken, getAllActivitiesReq);
 router.get('/activities/:venueId',validateUserToken, getActivitiesByVenueReq);
 router.post('/changeactivitystatus/:activityId', validateVenueOwnerToken, changeActivityStatusReq);
+router.post('/reservation', validateUserToken, createReservationReq);
+router.get('/reservation/:reservationId',validateUserToken, getReservationReq);
+router.get('/reservations',validateUserToken, getAllReservationsReq);
+router.get('/reservations/user/',validateUserToken, getReservationsByUserReq);
+router.get('/reservations/activity/:activityId',validateUserToken, getReservationsByActivityReq);
+router.get('/reservations/venue/:venueId',validateUserToken, getReservationsByVenueReq);
+router.post('/changePaymentStatus/:reservationId', validateUserToken, changePaymentStatusReq);
+router.post('/changeReservationStatus/:reservationId', validateUserToken, changeReservationStatusReq);
 
 export default router;
