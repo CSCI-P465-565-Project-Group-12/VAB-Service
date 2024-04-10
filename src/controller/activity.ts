@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 //TODO: activity rating take average of all ratings from reservsations.activityRating
 
 export const createActivityReq = async (req: Request, res: Response) => {
-  const { name, venueId, ageRange, cost, capacity, activityStatus, startTime, endTime, images } = req.body;
+  const { name, venueId, ageRange, cost, capacity, activityStatus, startTime, endTime, images,coverImg } = req.body;
   const id = uuidv4();
   const conflictActivities = await findConflictActivities(venueId, new Date(startTime), new Date(endTime));
   if (conflictActivities.length > 0) {
@@ -23,6 +23,7 @@ export const createActivityReq = async (req: Request, res: Response) => {
     startTime,
     endTime,
     images,
+    coverImg
   };
   try {
     const newActivity = await createActivity(activity);

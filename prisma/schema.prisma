@@ -11,6 +11,7 @@ generator client {
 // Model for Venues
 model Venue {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   //Venue Owner userid from User Service
   name        String
   state       String
   city        String
@@ -37,6 +38,7 @@ model Activity {
   images         String[]        // Array of Base64 encoded images
   startTime     DateTime
   endTime       DateTime
+  coverImg      String
   Reservations Reservation[] @relation("activityReservations")
 }
 

@@ -9,4 +9,5 @@ export interface Activity {
   startTime: Date;
   endTime: Date;
   images: string[];
+  coverImg: string;
 }
