@@ -10,7 +10,7 @@ generator client {
 
 // Model for Venues
 model Venue {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  id          String    @id @default(uuid()) @map("_id")
   userId      String   //Venue Owner userid from User Service
   name        String
   state       String
@@ -27,7 +27,7 @@ model Venue {
 
 // Model for Activities
 model Activity {
-  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  id            String        @id @default(uuid()) @map("_id")
   name          String
   venueId       String
   venue         Venue         @relation(fields: [venueId], references: [id])
@@ -38,13 +38,13 @@ model Activity {
   images         String[]        // Array of Base64 encoded images
   startTime     DateTime
   endTime       DateTime
-  coverImg      String
+  //coverImg      String
   Reservations Reservation[] @relation("activityReservations")
 }
 
 // Model for Reservations
 model Reservation {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  id            String   @id @default(uuid()) @map("_id")
   userId        String    // ID from User Service
   venueId       String
   venue         Venue    @relation(fields: [venueId], references: [id], name: "venueReservations")
