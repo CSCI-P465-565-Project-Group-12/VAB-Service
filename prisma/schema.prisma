@@ -11,7 +11,7 @@ generator client {
 // Model for Venues
 model Venue {
   id          String    @id @default(uuid()) @map("_id")
-  userId      String   //Venue Owner userid from User Service
+  //userId      String   //Venue Owner userid from User Service
   name        String
   state       String
   city        String
