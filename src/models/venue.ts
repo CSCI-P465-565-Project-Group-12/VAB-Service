@@ -2,7 +2,7 @@
 
 export interface Venue{
   id: string; 
-  // userId: string;
+  userId: string;
   name: string; 
   state: string; 
   city: string; 

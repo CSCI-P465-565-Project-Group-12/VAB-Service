@@ -4,10 +4,11 @@ import { Venue } from '../models/venue';
 import { calculateAverageVenueRating } from './reservation';
 
 export const createVenue = async(venue: Venue) => {
-  const {id, name, state, city, street, zipcode, venueStatus, details, venueType, images} = venue;
+  const {id, userId, name, state, city, street, zipcode, venueStatus, details, venueType, images} = venue;
   return await prisma.venue.create({
       data: {
           id,
+          userId,
           name,
           state,
           city,

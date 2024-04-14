@@ -16,7 +16,9 @@ import {
   getReservationsByActivityReq,
   getReservationsByVenueReq,
   changePaymentStatusReq,
-  changeReservationStatusReq
+  changeReservationStatusReq,
+  addRatingsReq,
+  createPaymentIntent,
 } from "./controller/index";
 import { validateUserToken, validateVenueOwnerToken } from "./middleware/auth";
 
@@ -40,5 +42,7 @@ router.get('/reservations/activity/:activityId',validateUserToken, getReservatio
 router.get('/reservations/venue/:venueId',validateUserToken, getReservationsByVenueReq);
 router.post('/changePaymentStatus/:reservationId', validateUserToken, changePaymentStatusReq);
 router.post('/changeReservationStatus/:reservationId', validateUserToken, changeReservationStatusReq);
+router.post('/addRatings/:reservationId', validateUserToken, addRatingsReq);
+router.post('/createPaymentIntent', validateUserToken, createPaymentIntent);
 
 export default router;

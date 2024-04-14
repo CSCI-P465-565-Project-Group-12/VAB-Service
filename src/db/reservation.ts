@@ -63,3 +63,36 @@ export const getReservationsByVenue = async (venueId: string) => {
     },
   });
 };
+
+
+export const calculateAverageActivityRating =async (activityId: string) => {
+  const aggregate = await prisma.reservation.aggregate({
+    _avg: {
+      activityRating: true,
+    },
+    where: {
+      activityId: activityId,
+      NOT: {
+        activityRating: null,
+      },
+    },
+  });
+
+  return aggregate._avg.activityRating ?? 0; // Return the average rating or 0 if there are no ratings
+}
+
+export const calculateAverageVenueRating = async (venueId: string) => {
+  const aggregate = await prisma.reservation.aggregate({
+    _avg: {
+      venueRating: true,
+    },
+    where: {
+      venueId: venueId,
+      NOT: {
+        venueRating: null,
+      },
+    },
+  });
+
+  return aggregate._avg.venueRating ?? 0; // Return the average rating or 0 if there are no ratings
+}
