@@ -1,6 +1,7 @@
 // Purpose: Contains functions that interact with the database to perform CRUD operations on the venues table.
 import {prisma} from '../db/index';
 import { Venue } from '../models/venue';
+import { calculateAverageVenueRating } from './reservation';
 
 export const createVenue = async(venue: Venue) => {
   const {id, name, state, city, street, zipcode, venueStatus, details, venueType, images} = venue;
@@ -21,15 +22,22 @@ export const createVenue = async(venue: Venue) => {
 }
 
 export const getVenue = async (venueId: string) => {
-	return await prisma.venue.findUnique({
-		where: {
-			id: String(venueId),
-		},
-	});
+  const venue = await prisma.venue.findUnique({
+    where: {
+      id: String(venueId),
+    },
+  });
+  const rating =  await calculateAverageVenueRating(venueId);
+  return {...venue, rating: rating};  
 };
 
 export const getAllVenues = async () => {
-  return await prisma.venue.findMany();
+  const venues = await prisma.venue.findMany();
+  const venuesWithRatings = await Promise.all(venues.map(async (venue) => {
+    const averageRating = await calculateAverageVenueRating(venue.id);
+    return { ...venue, averageRating };
+  }));
+  return venuesWithRatings;
 }
 
 export const updateVenue = async(venueId: string, updateParams: Partial<Venue>) =>{

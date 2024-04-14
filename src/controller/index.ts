@@ -19,8 +19,12 @@ import {
   getReservationsByActivityReq,
   getReservationsByVenueReq,
   changePaymentStatusReq,
-  changeReservationStatusReq
+  changeReservationStatusReq,
+  addRatingsReq,
 } from "./reservation";
+import {
+  createPaymentIntent
+} from "./payment";
 
 export {
   createVenueReq,
@@ -40,4 +44,6 @@ export {
   getReservationsByVenueReq,
   changePaymentStatusReq,
   changeReservationStatusReq,
+  addRatingsReq,
+  createPaymentIntent
 }
