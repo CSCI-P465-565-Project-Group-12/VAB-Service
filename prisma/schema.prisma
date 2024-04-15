@@ -32,7 +32,7 @@ model Activity {
   venueId       String
   venue         Venue         @relation(fields: [venueId], references: [id])
   ageRange      String
-  cost          Float
+  cost          String
   capacity      Int
   activityStatus String      // "open", "sold out", or "cancelled"
   images         String[]        // Array of Base64 encoded images

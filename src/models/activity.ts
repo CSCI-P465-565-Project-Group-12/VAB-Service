@@ -3,7 +3,7 @@ export interface Activity {
   name: string;
   venueId: string;
   ageRange: string;
-  cost: number;
+  cost: string;
   capacity: number;
   activityStatus: 'open' | 'sold out' | 'cancelled';
   startTime: Date;
