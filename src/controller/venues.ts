@@ -9,7 +9,7 @@ export const createVenueReq = async (req: Request, res: Response) => {
   const { name, state, city, street, zipcode, details, venueType, images } = req.body;
   const venueStatus = "active";
   const id = uuidv4();
-  const userId = req.user.id;
+  const userId = req.user.jwtUserObj.id;
   const venue: Venue = {
     id,
     userId,

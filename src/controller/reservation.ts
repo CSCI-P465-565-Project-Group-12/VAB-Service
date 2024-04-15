@@ -33,7 +33,7 @@ export const createReservationReq = async (req: Request, res: Response) => {
   try {
     const newReservation = await createReservation(reservation);
     //Mails thing
-    const user = req.user;
+    const user = req.user.jwtUserObj;
     //TODO: update the url with api gateway url
     // const profile = await axios.get(`${API_GATEWAY_URL}/profile/${user.id}`);
     const profile = await axios.get(`${userUrl}/profile/${user.id}`);
@@ -57,7 +57,6 @@ export const createReservationReq = async (req: Request, res: Response) => {
     }
     const sendMailToVenueOwner = await axios.post(`${mailUrl}/send-mail`, { body2 });
 
-    
     res.status(201).json(newReservation);
   } catch (error) {
     console.error("Create reservation error:", error);
