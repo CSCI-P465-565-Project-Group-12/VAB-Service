@@ -1,14 +1,17 @@
 import { Request, Response, NextFunction } from "express";
-import { createActivity, getActivity, getAllActivities, findConflictActivities, getActivitiesByVenue, updateActivity } from "../db/activities";
+import { createActivity, getActivity, getAllActivities, getActivitiesByVenue, findConflictActivities, updateActivity } from "../db/activities";
+// import { findConflictActivities } from "../db/activities";
 import { Activity } from "../models/activity";
 import { v4 as uuidv4 } from "uuid";
 
 //TODO: activity rating take average of all ratings from reservsations.activityRating
 
 export const createActivityReq = async (req: Request, res: Response) => {
-  const { name, venueId, ageRange, cost, capacity, activityStatus, startTime, endTime, images,coverImg } = req.body;
+  const { name, venueId, ageRange, cost, capacity, activityStatus, startTime, endTime, images,coverImg, description } = req.body;
   const id = uuidv4();
-  const conflictActivities = await findConflictActivities(venueId, new Date(startTime), new Date(endTime));
+  const parsedStartTime = new Date(startTime);
+  const parsedEndTime = new Date(endTime);
+  const conflictActivities = await findConflictActivities(venueId, parsedStartTime, parsedEndTime);
   if (conflictActivities.length > 0) {
     return res.status(409).json({ message: "Activity conflicts with existing activities." });
   }
@@ -20,8 +23,9 @@ export const createActivityReq = async (req: Request, res: Response) => {
     cost,
     capacity,
     activityStatus,
-    startTime,
-    endTime,
+    description,
+    startTime: parsedStartTime,
+    endTime: parsedEndTime,
     images,
     coverImg
   };
@@ -71,6 +75,7 @@ export const changeActivityStatusReq = async(req: Request, res: Response) => {
   const { activityStatus } = req.body;
   try {
     const updatedActivity = await updateActivity(activityId, { activityStatus });
+    //TODO: Cancel and refund all reservations for the activity and send mails to all users with reservations
     res.status(200).json(updatedActivity);
   } catch (error) {
     console.error("Change activity status error:", error);

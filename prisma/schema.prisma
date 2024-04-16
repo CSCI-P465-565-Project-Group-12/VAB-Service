@@ -36,6 +36,7 @@ model Activity {
   capacity      Int
   activityStatus String      // "open", "sold out", or "cancelled"
   images         String[]        // Array of Base64 encoded images
+  description String
   startTime     DateTime
   endTime       DateTime
   coverImg      String

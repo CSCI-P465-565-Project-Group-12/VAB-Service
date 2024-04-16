@@ -6,6 +6,7 @@ export interface Activity {
   cost: string;
   capacity: number;
   activityStatus: 'open' | 'sold out' | 'cancelled';
+  description: string;
   startTime: Date;
   endTime: Date;
   images: string[];

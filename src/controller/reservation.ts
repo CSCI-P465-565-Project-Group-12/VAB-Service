@@ -10,7 +10,8 @@ import { getVenue } from "../db/venues";
 
 
 export const createReservationReq = async (req: Request, res: Response) => {
-  const { activityId, venueId, bookingTimeStamp } = req.body;
+  const { activityId, venueId } = req.body;
+  const bookingTimeStamp = new Date();
   const status = "Booked";
   const paymentStatus = "Pending";
   const userId = req.user.jwtUserObj.id;
