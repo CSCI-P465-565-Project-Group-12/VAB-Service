@@ -36,6 +36,7 @@ export const createReservationReq = async (req: Request, res: Response) => {
   };
   try {
     const newReservation = await createReservation(reservation);
+    const venue =  await getVenue(venueId);
     //Mails thing
     const user = req.user.jwtUserObj;
     console.log("headers", req.headers, userUrl);
@@ -45,11 +46,11 @@ export const createReservationReq = async (req: Request, res: Response) => {
       to: user.email,
       data: {
         firstName: profile.data.last_name,
-        activityName: activity.name,
-        activityDate: activity.startTime,
+        eventName: activity.name,
+        eventDate: activity.startTime,
+        eventLocation: `${venue.street}, ${venue.city}, ${venue.state}, ${venue.zipcode}`,
       },
     });
-    const venue =  await getVenue(venueId);
     const venueOwner = await axios.get(`${userUrl}/user/${venue.userId}`);
     console.log("venueOwner", venueOwner.data);
     const sendMailToVenueOwner = await axios.post(`${mailUrl}/send-mail`, {
