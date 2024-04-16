@@ -62,6 +62,7 @@ export const deActivateVenueReq = async (req: Request, res: Response) => {
   const venueStatus = "inactive";
   try {
     const updatedVenue = await updateVenue(venueId, { venueStatus });
+  //TODO: Deactivate all activities in the venue
     res.status(200).json(updatedVenue);
   } catch (error) {
     console.error("Deactivate venue error:", error);

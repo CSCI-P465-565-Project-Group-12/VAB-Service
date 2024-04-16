@@ -10,10 +10,14 @@ import { getVenue } from "../db/venues";
 
 
 export const createReservationReq = async (req: Request, res: Response) => {
-  const { userId, activityId, venueId, status, paymentStatus, bookingTimeStamp } = req.body;
+  const { activityId, venueId, bookingTimeStamp } = req.body;
+  const status = "Booked";
+  const paymentStatus = "Pending";
+  const userId = req.user.jwtUserObj.id;
   const id = uuidv4();
   const activity = await getActivity(activityId);
   const reservationsForCurrentActivity = await getReservationsByActivity(activityId);
+  //TODO: check if active reservations only
   if (activity.activityStatus === "sold out") {
     return res.status(400).json({ message: "Activity is sold out." });
   }
@@ -86,7 +90,7 @@ export const getAllReservationsReq = async (req: Request, res: Response) => {
 };
 
 export const getReservationsByUserReq = async (req: Request, res: Response) => {
-  const { userId } = req.user.id;
+  const { userId } = req.user.jwtUserObj.id;
   try {
     const reservations = await getReservationsByUser(userId);
     res.status(200).json(reservations);
@@ -144,7 +148,7 @@ export const changePaymentStatusReq = async (req: Request, res: Response) => {
 
 export const addRatingsReq = async (req: Request, res: Response) => {
   const { reservationId } = req.params;
-  const { venueRating, activityRating } = req.body;
+  const { venueRating, activityRating, activityReview } = req.body;
   try {
     const updatedReservation = await updateReservation(reservationId, { venueRating, activityRating });
     res.status(200).json(updatedReservation);
