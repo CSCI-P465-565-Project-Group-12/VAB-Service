@@ -49,7 +49,7 @@ model Reservation {
   userId        String    // ID from User Service
   venueId       String
   venue         Venue    @relation(fields: [venueId], references: [id], name: "venueReservations")
-  activityId    String?
+  activityId    String
   activity      Activity? @relation(fields: [activityId], references: [id], name: "activityReservations")
   bookingTimeStamp DateTime
   status        String    // "booked", "confirmed", or "cancelled"

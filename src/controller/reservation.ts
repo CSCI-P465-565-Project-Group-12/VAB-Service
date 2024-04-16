@@ -110,7 +110,11 @@ export const getReservationsByUserReq = async (req: Request, res: Response) => {
   const { userId } = req.user.jwtUserObj.id;
   try {
     const reservations = await getReservationsByUser(userId);
-    res.status(200).json(reservations);
+    const reservationsWithActivity = await Promise.all(reservations.map(async (reservation) => {
+      const activity = await getActivity(reservation.activityId);
+      return { ...reservation, ...activity };
+    }))
+    res.status(200).json(reservationsWithActivity);
   } catch (error) {
     console.error("Get reservations by user error:", error);
     res.status(500).json({ message: "An error occurred during reservation retrieval." });
@@ -132,7 +136,11 @@ export const getReservationsByVenueReq = async (req: Request, res: Response) => 
   const { venueId } = req.params;
   try {
     const reservations = await getReservationsByVenue(venueId);
-    res.status(200).json(reservations);
+    const reservationsWithActivity = await Promise.all(reservations.map(async (reservation) => {
+      const activity = await getActivity(reservation.activityId);
+      return { ...reservation, ...activity };
+    }))
+    res.status(200).json(reservationsWithActivity);
   } catch (error) {
     console.error("Get reservations by venue error:", error);
     res.status(500).json({ message: "An error occurred during reservation retrieval." });
