@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { createReservation, updateReservation, getAllReservations, getReservation, getReservationsByUser, getReservationsByActivity, getReservationsByVenue } from "../db/reservation";
+import { createReservation, updateReservation, getAllReservations, getReservation, getReservationsByUser, getReservationsByActivity, getReservationsByVenue, getBookedorConfirmedReservationsByActivity } from "../db/reservation";
 import { getActivity, updateActivity } from "../db/activities";
 import { Reservation } from "../models/reservation";
 import { v4 as uuidv4 } from "uuid";
@@ -17,12 +17,11 @@ export const createReservationReq = async (req: Request, res: Response) => {
   const userId = req.user.jwtUserObj.id;
   const id = uuidv4();
   const activity = await getActivity(activityId);
-  const reservationsForCurrentActivity = await getReservationsByActivity(activityId);
-  //TODO: check if active reservations only
+  const bookedorConfirmedReservationsForCurrentActivity = await getBookedorConfirmedReservationsByActivity(activityId);
   if (activity.activityStatus === "sold out") {
     return res.status(400).json({ message: "Activity is sold out." });
   }
-  if (activity.capacity && reservationsForCurrentActivity.length >= activity.capacity) {
+  if (activity.capacity && bookedorConfirmedReservationsForCurrentActivity.length == activity.capacity) {
     const updatedActivity = await updateActivity(activityId, { activityStatus: "sold out" });
     return res.status(400).json({ message: "Activity is sold out." });
   }
@@ -39,13 +38,9 @@ export const createReservationReq = async (req: Request, res: Response) => {
     const newReservation = await createReservation(reservation);
     //Mails thing
     const user = req.user.jwtUserObj;
-    //TODO: update the url with api gateway url
-    // const profile = await axios.get(`${API_GATEWAY_URL}/profile/${user.id}`);
     console.log("headers", req.headers, userUrl);
     const profile = await axios.get(`${userUrl}/profileByUserId/${userId}`);
     console.log("profile", profile.data);
-    //TODO: update the url with api gateway url
-    // const sendMailToUser = await axios.post(`${API_GATEWAY_URL}/event-registration-confirmation-mail`, { body });
     const sendMailToUser = await axios.post(`${mailUrl}/event-registration-confirmation-mail`,  {
       to: user.email,
       data: {
@@ -60,7 +55,7 @@ export const createReservationReq = async (req: Request, res: Response) => {
     const sendMailToVenueOwner = await axios.post(`${mailUrl}/send-mail`, {
       to: venueOwner.data.email,
       subject: "New Reservation Notification",
-      text: `You have a new reservation for your venue ${venue.name}.`,
+      text: `You have a new reservation for your activity ${activity.name} at the venue ${venue.name}.`,
     });
 
     res.status(201).json(newReservation);

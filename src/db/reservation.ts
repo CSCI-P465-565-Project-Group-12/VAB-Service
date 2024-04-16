@@ -56,6 +56,17 @@ export const getReservationsByActivity = async (activityId: string) => {
   });
 };
 
+export const getBookedorConfirmedReservationsByActivity = async (activityId: string) => {
+  return await prisma.reservation.findMany({
+    where: {
+      activityId,
+      status: {
+        in: ['Booked', 'Confirmed'],
+      },
+    },
+  });
+};
+
 export const getReservationsByVenue = async (venueId: string) => {
   return await prisma.reservation.findMany({
     where: {

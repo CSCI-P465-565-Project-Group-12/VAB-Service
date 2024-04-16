@@ -39,7 +39,7 @@ router.get('/reservation/:reservationId',validateUserToken, getReservationReq);
 router.get('/reservations',validateUserToken, getAllReservationsReq);
 router.get('/reservations/user/',validateUserToken, getReservationsByUserReq);
 router.get('/reservations/activity/:activityId',validateUserToken, getReservationsByActivityReq);
-router.get('/reservations/venue/:venueId',validateUserToken, getReservationsByVenueReq);
+router.get('/reservations/venue/:venueId',validateVenueOwnerToken, getReservationsByVenueReq);
 router.post('/changePaymentStatus/:reservationId', validateUserToken, changePaymentStatusReq);
 router.post('/changeReservationStatus/:reservationId', validateUserToken, changeReservationStatusReq);
 router.post('/addRatings/:reservationId', validateUserToken, addRatingsReq);
