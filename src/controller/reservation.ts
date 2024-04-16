@@ -40,26 +40,27 @@ export const createReservationReq = async (req: Request, res: Response) => {
     const user = req.user.jwtUserObj;
     //TODO: update the url with api gateway url
     // const profile = await axios.get(`${API_GATEWAY_URL}/profile/${user.id}`);
-    const profile = await axios.get(`${userUrl}/profile/${user.id}`);
-    const body = {
-      to: req.user.email,
+    console.log("headers", req.headers, userUrl);
+    const profile = await axios.get(`${userUrl}/profileByUserId/${userId}`);
+    console.log("profile", profile.data);
+    //TODO: update the url with api gateway url
+    // const sendMailToUser = await axios.post(`${API_GATEWAY_URL}/event-registration-confirmation-mail`, { body });
+    const sendMailToUser = await axios.post(`${mailUrl}/event-registration-confirmation-mail`,  {
+      to: user.email,
       data: {
-        firstName: profile.data.firstName,
+        firstName: profile.data.last_name,
         activityName: activity.name,
         activityDate: activity.startTime,
       },
-    };
-    //TODO: update the url with api gateway url
-    // const sendMailToUser = await axios.post(`${API_GATEWAY_URL}/event-registration-confirmation-mail`, { body });
-    const sendMailToUser = await axios.post(`${mailUrl}/event-registration-confirmation-mail`, { body });
+    });
     const venue =  await getVenue(venueId);
-    const venueOwner = await axios.get(`${userUrl}/profile/${venue.userId}`);
-    const body2 = {
+    const venueOwner = await axios.get(`${userUrl}/user/${venue.userId}`);
+    console.log("venueOwner", venueOwner.data);
+    const sendMailToVenueOwner = await axios.post(`${mailUrl}/send-mail`, {
       to: venueOwner.data.email,
       subject: "New Reservation Notification",
       text: `You have a new reservation for your venue ${venue.name}.`,
-    }
-    const sendMailToVenueOwner = await axios.post(`${mailUrl}/send-mail`, { body2 });
+    });
 
     res.status(201).json(newReservation);
   } catch (error) {
