@@ -4,7 +4,7 @@ import { Activity } from '../models/activity';
 import { calculateAverageActivityRating } from './reservation';
 
 export const createActivity = async(activity: Activity) => {
-  const {id, name, venueId, ageRange, cost, capacity, activityStatus, startTime, endTime, images, coverImg} = activity;
+  const {id, name, venueId, ageRange, cost, capacity, activityStatus, startTime, endTime, images, coverImg, description} = activity;
   return await prisma.activity.create({
       data: {
         id,
@@ -14,6 +14,7 @@ export const createActivity = async(activity: Activity) => {
         cost,
         capacity,
         activityStatus,
+        description,
         startTime,
         endTime,
         images,
