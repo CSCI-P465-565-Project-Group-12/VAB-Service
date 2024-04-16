@@ -18,6 +18,11 @@ export const createReservationReq = async (req: Request, res: Response) => {
   const id = uuidv4();
   const activity = await getActivity(activityId);
   const bookedorConfirmedReservationsForCurrentActivity = await getBookedorConfirmedReservationsByActivity(activityId);
+  const userReservations = await getReservationsByUser(userId);
+  const userReservationsForCurrentActivity = userReservations.filter((reservation) => reservation.activityId === activityId);
+  if (userReservationsForCurrentActivity.length > 0) {
+    return res.status(400).json({ message: "User already has a reservation for the activity." });
+  }
   if (activity.activityStatus === "sold out") {
     return res.status(400).json({ message: "Activity is sold out." });
   }
@@ -112,7 +117,7 @@ export const getReservationsByUserReq = async (req: Request, res: Response) => {
     const reservations = await getReservationsByUser(userId);
     const reservationsWithActivity = await Promise.all(reservations.map(async (reservation) => {
       const activity = await getActivity(reservation.activityId);
-      return { ...reservation, ...activity };
+      return { ...reservation, activity };
     }))
     res.status(200).json(reservationsWithActivity);
   } catch (error) {
@@ -138,7 +143,10 @@ export const getReservationsByVenueReq = async (req: Request, res: Response) => 
     const reservations = await getReservationsByVenue(venueId);
     const reservationsWithActivity = await Promise.all(reservations.map(async (reservation) => {
       const activity = await getActivity(reservation.activityId);
-      return { ...reservation, ...activity };
+      return { 
+        reservation:{...reservation},
+        activity:{...activity} 
+      };
     }))
     res.status(200).json(reservationsWithActivity);
   } catch (error) {
