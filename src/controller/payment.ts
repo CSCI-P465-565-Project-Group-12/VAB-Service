@@ -1,8 +1,5 @@
 import { Request, Response } from "express";
-import { Stripe } from 'stripe';
-import { stripeSecret } from '../app';
-
-const stripe = new Stripe( stripeSecret || '');
+import { stripe } from "../app";
 
 export const createPaymentIntent = async (req: Request, res: Response) => {
   try {

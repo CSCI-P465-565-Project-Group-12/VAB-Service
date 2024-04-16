@@ -44,6 +44,6 @@ router.get('/reservations/venue/:venueId',validateVenueOwnerToken, getReservatio
 router.post('/changePaymentStatus/:reservationId', validateUserToken, changePaymentStatusReq);
 router.post('/changeReservationStatus/:reservationId', validateUserToken, changeReservationStatusReq);
 router.post('/addRatings/:reservationId', validateUserToken, addRatingsReq);
-router.post('/createPaymentIntent', validateUserToken, createPaymentIntent);
+router.post('/createPaymentIntent', createPaymentIntent);
 
 export default router;
