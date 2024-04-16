@@ -34,6 +34,7 @@ router.get('/activity/:activityId', getActivityReq);
 router.get('/activities', getAllActivitiesReq);
 router.get('/activities/:venueId',validateUserToken, getActivitiesByVenueReq);
 router.post('/changeactivitystatus/:activityId', validateVenueOwnerToken, changeActivityStatusReq);
+router.post('/cancelactivity/:activityId', validateVenueOwnerToken, changeActivityStatusReq);
 router.post('/reservation', validateUserToken, createReservationReq);
 router.get('/reservation/:reservationId',validateUserToken, getReservationReq);
 router.get('/reservations',validateUserToken, getAllReservationsReq);

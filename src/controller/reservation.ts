@@ -25,6 +25,21 @@ export const createReservationReq = async (req: Request, res: Response) => {
     const updatedActivity = await updateActivity(activityId, { activityStatus: "sold out" });
     return res.status(400).json({ message: "Activity is sold out." });
   }
+  if (activity.capacity && bookedorConfirmedReservationsForCurrentActivity.length == activity.capacity - 1) {
+    const updatedActivity = await updateActivity(activityId, { activityStatus: "sold out" });
+  }
+  if (activity.startTime && activity.startTime < bookingTimeStamp) {
+    return res.status(400).json({ message: "Activity has already started." });
+  }
+  if(activity.endTime && activity.endTime < bookingTimeStamp) { 
+    return res.status(400).json({ message: "Activity has already ended." });
+  }
+  if (activity.venueId !== venueId) {
+    return res.status(400).json({ message: "Activity is not at the specified venue." });
+  }
+  if (activity.activityStatus === "cancelled") {
+    return res.status(400).json({ message: "Activity is cancelled." });
+  }
   const reservation: Reservation = {
     id,
     userId,
@@ -34,6 +49,10 @@ export const createReservationReq = async (req: Request, res: Response) => {
     paymentStatus,
     bookingTimeStamp,
   };
+  if (activity.cost && activity.cost === "0.00") {
+    reservation.paymentStatus = "Completed";
+    reservation.status = "Confirmed";
+  }
   try {
     const newReservation = await createReservation(reservation);
     const venue =  await getVenue(venueId);

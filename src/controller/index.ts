@@ -10,6 +10,7 @@ import {
   getAllActivitiesReq,
   getActivitiesByVenueReq,
   changeActivityStatusReq,
+  cancelActivityReq,
 } from "./activity";
 import {
   createReservationReq,

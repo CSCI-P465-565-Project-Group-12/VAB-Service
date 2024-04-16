@@ -3,8 +3,10 @@ import { createActivity, getActivity, getAllActivities, getActivitiesByVenue, fi
 // import { findConflictActivities } from "../db/activities";
 import { Activity } from "../models/activity";
 import { v4 as uuidv4 } from "uuid";
+import { getBookedorConfirmedReservationsByActivity, updateReservation } from "../db/reservation";
+import axios from "axios";
+import { mailUrl, userUrl } from "../app";
 
-//TODO: activity rating take average of all ratings from reservsations.activityRating
 
 export const createActivityReq = async (req: Request, res: Response) => {
   const { name, venueId, ageRange, cost, capacity, activityStatus, startTime, endTime, images,coverImg, description } = req.body;
@@ -80,5 +82,28 @@ export const changeActivityStatusReq = async(req: Request, res: Response) => {
   } catch (error) {
     console.error("Change activity status error:", error);
     res.status(500).json({ message: "An error occurred during activity status change." });
+  }
+};
+
+export const cancelActivityReq = async(req: Request, res: Response) => {
+  const { activityId } = req.params;
+  try {
+    const reservations = await getBookedorConfirmedReservationsByActivity(activityId);
+    await Promise.all(reservations.map(async (reservation) => {
+      const cancelReservation = await updateReservation(reservation.id, { status: "Cancelled", paymentStatus: "Refunded" });
+      const activity = await getActivity(activityId);
+      const user = await axios.get(`${userUrl}/user/${cancelReservation.userId}`);
+      const sendMail = await axios.post(`${mailUrl}/send-mail`, {
+        to : user.data.email,
+        subject: "Event Cancellation Notification",
+        text: `The event ${activity.name} has been cancelled. Your reservation has been refunded. It typically takes 3-5 business days for the refund to reflect in your account. If not refunded within this time, please contact us.`
+      });
+    }));
+    const updatedActivity = await updateActivity(activityId, { activityStatus: "cancelled" });
+    res.status(200).json(updatedActivity);
+  }
+  catch (error) {
+    console.error("Cancel activity error:", error);
+    res.status(500).json({ message: "An error occurred during activity cancellation." });
   }
 };
