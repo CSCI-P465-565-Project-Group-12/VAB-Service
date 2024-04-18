@@ -26,10 +26,10 @@ jobs:
           docker login --username saisathwikreddy --password ${{secrets.ACCESS_TOKEN}} ghcr.io
           docker build -t ghcr.io/saisathwikreddy/bashboss/vab-service:latest --file Dockerfile .  
           docker push ghcr.io/saisathwikreddy/bashboss/vab-service:latest 
-  # deploy:
-  #   runs-on: ubuntu-latest
-  #   needs: build_and_push
-  #   steps:
-  #     - name: Deploy to Render
-  #       run : |
-  #         curl -X POST "https://api.render.com/deploy/srv-cogllpo21fec73bi83lg?key=${{ secrets.RENDER_DEPLOY_KEY }}"
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build_and_push
+    steps:
+      - name: Deploy to Render
+        run : |
+          curl -X POST "https://api.render.com/deploy/srv-cogm27v79t8c73bva2r0?key=${{ secrets.RENDER_DEPLOY_KEY }}"
