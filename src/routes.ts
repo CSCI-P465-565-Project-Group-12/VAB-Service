@@ -45,5 +45,9 @@ router.post('/changePaymentStatus/:reservationId', validateUserToken, changePaym
 router.post('/changeReservationStatus/:reservationId', validateUserToken, changeReservationStatusReq);
 router.post('/addRatings/:reservationId', validateUserToken, addRatingsReq);
 router.post('/createPaymentIntent', createPaymentIntent);
+router.get("/health-check", (req, res) => {
+  console.log("Health check passed");
+  res.status(200).json({ message: "Health check passed" });
+});
 
 export default router;

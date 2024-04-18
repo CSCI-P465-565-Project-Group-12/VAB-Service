@@ -6,7 +6,7 @@ import { Stripe } from 'stripe';
 dotenv.config();
 
 const app: Express = express();
-const port: number = 8081;
+const port = process.env.PORT || 8081;
 export const jwtSecret: string = process.env.JWT_SECRET as string;
 export const mailUrl = process.env.MAIL_URL as string;
 export const userUrl = process.env.USER_URL as string;
