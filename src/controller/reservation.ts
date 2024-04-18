@@ -130,7 +130,17 @@ export const getReservationsByActivityReq = async (req: Request, res: Response) 
   const { activityId } = req.params;
   try {
     const reservations = await getReservationsByActivity(activityId);
-    res.status(200).json(reservations);
+    const reservationsWithUserDetails = await Promise.all(reservations.map(async (reservation) => {
+      const user = await axios.get(`${userUrl}/user/${reservation.userId}`);
+      const profile = await axios.get(`${userUrl}/profileByUserId/${reservation.userId}`);
+      return { 
+        ...reservation, 
+        username: user.data.username, 
+        email: user.data.email, 
+        firstName: profile.data.first_name, 
+        lastName: profile.data.last_name};
+    }));
+    res.status(200).json(reservationsWithUserDetails);
   } catch (error) {
     console.error("Get reservations by activity error:", error);
     res.status(500).json({ message: "An error occurred during reservation retrieval." });
