@@ -66,11 +66,14 @@ export const findConflictActivities = async (venueId: string, startTime: Date, e
 };
 
 export const getActivitiesByVenue = async (venueId: string) => {
-  const activity =  await prisma.activity.findMany({
+  const activities =  await prisma.activity.findMany({
     where: {
       venueId,
     },
   });
-  const rating  =  await calculateAverageActivityRating(activity[0].id);
-  return {...activity, rating: rating};
+  const activitiesWithRatings = await Promise.all(activities.map(async (activity) => {
+    const averageRating = await calculateAverageActivityRating(activity.id);
+    return { ...activity, averageRating };
+  }));
+  return activitiesWithRatings;
 };
