@@ -132,13 +132,14 @@ export const getReservationsByActivityReq = async (req: Request, res: Response) 
     const reservations = await getReservationsByActivity(activityId);
     const reservationsWithUserDetails = await Promise.all(reservations.map(async (reservation) => {
       const user = await axios.get(`${userUrl}/user/${reservation.userId}`);
-      const profile = await axios.get(`${userUrl}/profileByUserId/${reservation.userId}`);
+      // const profile = await axios.get(`${userUrl}/profileByUserId/${reservation.userId}`);
       return { 
         ...reservation, 
         username: user.data.username, 
-        email: user.data.email, 
-        firstName: profile.data.first_name, 
-        lastName: profile.data.last_name};
+        email: user.data.email
+      }
+        // firstName: profile.data.first_name, 
+        // lastName: profile.data.last_name};
     }));
     res.status(200).json(reservationsWithUserDetails);
   } catch (error) {
