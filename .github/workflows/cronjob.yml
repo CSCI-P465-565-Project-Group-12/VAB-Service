@@ -1,0 +1,14 @@
+name: Health Check Workflow
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'  # Runs every 15 minutes
+
+jobs:
+  health_check:
+    runs-on: ubuntu-latest  # The type of runner that the job will run on
+
+    steps:
+    - name: Check API Health
+      run: |
+        curl -s -o /dev/null -w "%{http_code}" https://bash-boss-vab-service.onrender.com/health-check
