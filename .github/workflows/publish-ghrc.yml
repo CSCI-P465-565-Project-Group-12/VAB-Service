@@ -32,4 +32,4 @@ jobs:
     steps:
       - name: Deploy to Render
         run : |
-          curl -X POST "https://api.render.com/deploy/srv-cogm27v79t8c73bva2r0?key=${{ secrets.RENDER_DEPLOY_KEY }}"
+          curl -X POST "https://api.render.com/deploy/srv-coiaoa5jm4es739kv6tg?key=${{ secrets.RENDER_DEPLOY_KEY }}"
